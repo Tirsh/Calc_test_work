@@ -2,14 +2,16 @@ import java.util.*;
 
 public class Main {
     private static final Map<String, Integer> ROMANIAN = new HashMap<>(Map.of(
-            "C", 100, "XC", 90,"L", 50,
+            "C", 100, "XC", 90, "L", 50,
             "XL", 40, "X", 10, "IX", 9,
             "V", 5, "IV", 4, "I", 1));
     private static final Set<String> ACTIONS = new HashSet<>(Set.of("/", "+", "-", "*"));
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String inputData = scanner.nextLine();
         try {
-            System.out.println(calc("IX * IX"));
+            System.out.println(calc(inputData));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,7 +50,7 @@ public class Main {
         StringBuilder result = new StringBuilder();
         List<String> strings = ROMANIAN.entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .map(i -> i.getKey()).toList();
+                .map(Map.Entry::getKey).toList();
         for (String value : strings) {
             while (num >= ROMANIAN.get(value)) {
                 result.append(value);
@@ -71,7 +73,7 @@ public class Main {
 
 
     private static List<String> stringParser(String input) throws Exception {
-        String[] split = input.split("\s");
+        String[] split = input.split("\\s");
         if (split.length != 3) {
             throw new Exception("Input data is not correct!");
         }
@@ -84,15 +86,10 @@ public class Main {
     }
 
     private static boolean isRomanian(String num) {
-        for (char ch : num.toCharArray()) {
-            if (!ROMANIAN.containsKey(String.valueOf(ch))) {
-                return false;
-            }
-        }
-        return true;
+        return num.matches("I{1,3}|VI{0,3}|I?[VX]");
     }
 
     private static boolean isArabic(String num) {
-        return num.matches("-?\\d{1,2}");
+        return num.matches("-?\\d0|-?\\d");
     }
 }
